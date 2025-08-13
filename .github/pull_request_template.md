@@ -2,7 +2,7 @@
 
 <!--
 Thank you for your Pull Request. Please provide a description above and review
-the requirements below.
+the requirements below..
 
 Contributors guide: https://github.com/shashirajraja/onlinebookstore/blob/master/CONTRIBUTING.md
 -->
