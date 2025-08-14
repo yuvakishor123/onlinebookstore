@@ -25,7 +25,7 @@ A user-friendly Online Bookstore project in which users can log in or register, 
 - Add New Books.
 - View Books Available.
 - Remove Books.
-- Increase Books Amount.
+- Increase Books Amount,.
 
 <span style="color:blue">**Users Have Following Access for this online store site:-**</span>
 - Create New Account or Register.
