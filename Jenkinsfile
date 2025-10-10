@@ -2,21 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'   // Make sure Maven is configured in Jenkins -> Manage Jenkins -> Tools
-        jdk 'JDK17'      // Optional, if using Java 11 project
-    }
-
-    environment {
-        // Nexus repository details
-        NEXUS_VERSION = 'nexus3'
-        NEXUS_PROTOCOL = 'http'
-        NEXUS_URL = 'http://13.201.226.254:8081'
-        NEXUS_REPOSITORY = 'maven-releases'         // Or maven-snapshots if using snapshot versions
-        NEXUS_CREDENTIAL_ID = 'nexus-cred'          // Jenkins credentials ID for Nexus login
-        GROUP_ID = 'com.example'
-        ARTIFACT_ID = 'myapp'
-        VERSION = '1.0.0'
-        PACKAGING = 'jar'
+        maven 'Maven3'    // Make sure this Maven is configured in Jenkins -> Manage Jenkins -> Tools
+        jdk 'JDK7'
     }
 
     stages {
@@ -27,7 +14,7 @@ pipeline {
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build Project') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -36,18 +23,16 @@ pipeline {
         stage('Upload Artifact to Nexus') {
             steps {
                 script {
-                    def artifactPath = "target/${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
-
                     nexusArtifactUploader(
-                        nexusVersion: "${NEXUS_VERSION}",
-                        protocol: "${NEXUS_PROTOCOL}",
-                        nexusUrl: "${NEXUS_URL}",
-                        groupId: "${GROUP_ID}",
-                        version: "${VERSION}",
-                        repository: "${NEXUS_REPOSITORY}",
-                        credentialsId: "${NEXUS_CREDENTIAL_ID}",
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: 'http://13.201.226.254:8081',
+                        groupId: 'com.example',
+                        version: '1.0.0',
+                        repository: 'maven-releases',
+                        credentialsId: 'nexus-cred',
                         artifacts: [
-                            [artifactId: "${ARTIFACT_ID}", classifier: '', file: artifactPath, type: "${PACKAGING}"]
+                            [artifactId: 'myapp', classifier: '', file: 'target/myapp-1.0.0.jar', type: 'jar']
                         ]
                     )
                 }
@@ -57,10 +42,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Build and artifact upload successful! Artifact stored in Nexus."
+            echo '✅ Artifact successfully uploaded to Nexus repository!'
         }
         failure {
-            echo "❌ Build or Nexus upload failed. Please check logs."
+            echo '❌ Build or upload failed. Please check the logs.'
         }
     }
 }
